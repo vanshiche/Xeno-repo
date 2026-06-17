@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataVault — Transaction Validation Platform</title>
+  <meta name="description" content="Enterprise-grade CSV transaction data validation and processing platform. Upload, validate, clean, and export your data with confidence." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <div class="nav-logo">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="7" fill="url(#logoGrad)"/>
+            <path d="M8 14L12 18L20 10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28">
+                <stop offset="0%" stop-color="#0A84FF"/>
+                <stop offset="100%" stop-color="#5E5CE6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="nav-title">DataVault</span>
+      </div>
+      <div class="nav-links">
+        <a href="#upload-section" class="nav-link" id="nav-upload">Upload</a>
+        <a href="#validation-section" class="nav-link" id="nav-validate">Validation</a>
+        <a href="#export-section" class="nav-link" id="nav-export">Export</a>
+      </div>
+      <div class="nav-badge">
+        <span class="badge-dot"></span>
+        <span>System Ready</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="hero-section">
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+    <div class="hero-content">
+      <div class="hero-chip">
+        <span class="chip-icon">⚡</span>
+        <span>AI-Powered Data Intelligence</span>
+      </div>
+      <h1 class="hero-title">
+        Validate. Clean.<br />
+        <span class="hero-gradient">Export with Confidence.</span>
+      </h1>
+      <p class="hero-subtitle">
+        Upload your transaction CSV — orders, products, payments — and get instant
+        validation against international phone formats, date rules, and data integrity
+        checks. Download a production-ready cleaned file in seconds.
+      </p>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-number">50+</span>
+          <span class="stat-label">Validation Rules</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-card">
+          <span class="stat-number">1M+</span>
+          <span class="stat-label">Rows Supported</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-card">
+          <span class="stat-number">20+</span>
+          <span class="stat-label">Country Formats</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-indicator"></div>
+    </div>
+  </section>
+
+  <!-- ── UPLOAD ── -->
+  <section class="section" id="upload-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-chip">Step 1</div>
+        <h2 class="section-title">Upload Your Dataset</h2>
+        <p class="section-subtitle">Drag & drop your CSV file or click to browse. Supports files up to 500 MB.</p>
+      </div>
+
+      <!-- Config Panel -->
+      <div class="config-panel" id="config-panel">
+        <div class="config-row">
+          <div class="config-group">
+            <label class="config-label" for="country-select">Phone Validation Country</label>
+            <div class="select-wrapper">
+              <select id="country-select" class="config-select">
+                <option value="IN">🇮🇳 India (+91) — 10 digits</option>
+                <option value="SG">🇸🇬 Singapore (+65) — 8 digits</option>
+                <option value="US">🇺🇸 United States (+1) — 10 digits</option>
+                <option value="GB">🇬🇧 United Kingdom (+44) — 10 digits</option>
+                <option value="AE">🇦🇪 UAE (+971) — 9 digits</option>
+                <option value="AU">🇦🇺 Australia (+61) — 9 digits</option>
+                <option value="DE">🇩🇪 Germany (+49) — variable</option>
+                <option value="FR">🇫🇷 France (+33) — 9 digits</option>
+                <option value="JP">🇯🇵 Japan (+81) — 10-11 digits</option>
+                <option value="MULTI">🌍 Multi-country (auto-detect)</option>
+              </select>
+              <svg class="select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="config-group">
+            <label class="config-label" for="date-format-select">Date Format</label>
+            <div class="select-wrapper">
+              <select id="date-format-select" class="config-select">
+                <option value="YYYY-MM-DD">YYYY-MM-DD (ISO 8601)</option>
+                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                <option value="DD-MM-YYYY" selected>DD-MM-YYYY (Indian Standard)</option>
+                <option value="AUTO">Auto-detect</option>
+              </select>
+              <svg class="select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="config-group">
+            <label class="config-label" for="chunk-size-input">Chunk Size (rows)</label>
+            <input type="number" id="chunk-size-input" class="config-input" value="10000" min="1000" max="100000" step="1000" />
+          </div>
+        </div>
+        <div class="config-row">
+          <div class="config-toggle-group">
+            <label class="toggle-label">
+              <input type="checkbox" id="toggle-phone" class="toggle-input" checked />
+              <span class="toggle-track"></span>
+              <span class="toggle-text">Phone Validation</span>
+            </label>
+            <label class="toggle-label">
+              <input type="checkbox" id="toggle-date" class="toggle-input" checked />
+              <span class="toggle-track"></span>
+              <span class="toggle-text">Date/Time Validation</span>
+            </label>
+            <label class="toggle-label">
+              <input type="checkbox" id="toggle-email" class="toggle-input" checked />
+              <span class="toggle-track"></span>
+              <span class="toggle-text">Email Validation</span>
+            </label>
+            <label class="toggle-label">
+              <input type="checkbox" id="toggle-amount" class="toggle-input" checked />
+              <span class="toggle-track"></span>
+              <span class="toggle-text">Amount/Numeric Checks</span>
+            </label>
+            <label class="toggle-label">
+              <input type="checkbox" id="toggle-duplicates" class="toggle-input" checked />
+              <span class="toggle-track"></span>
+              <span class="toggle-text">Duplicate Detection</span>
+            </label>
+            <label class="toggle-label">
+              <input type="checkbox" id="toggle-payment-mode" class="toggle-input" checked />
+              <span class="toggle-track"></span>
+              <span class="toggle-text">Payment Mode</span>
+            </label>
+            <label class="toggle-label">
+              <input type="checkbox" id="toggle-order-status" class="toggle-input" checked />
+              <span class="toggle-track"></span>
+              <span class="toggle-text">Order Status</span>
+            </label>
+            <label class="toggle-label">
+              <input type="checkbox" id="toggle-payment-status" class="toggle-input" checked />
+              <span class="toggle-track"></span>
+              <span class="toggle-text">Payment Status</span>
+            </label>
+            <label class="toggle-label">
+              <input type="checkbox" id="toggle-quantity" class="toggle-input" checked />
+              <span class="toggle-track"></span>
+              <span class="toggle-text">Quantity/SKU</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drop Zone -->
+      <div class="dropzone" id="dropzone">
+        <input type="file" id="file-input" accept=".csv" hidden />
+        <div class="dropzone-inner" id="dropzone-inner">
+          <div class="dropzone-icon">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <path d="M24 8L24 32M24 8L16 16M24 8L32 16" stroke="#0A84FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 36H40" stroke="#0A84FF" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="dropzone-text">
+            <p class="dropzone-main">Drop your CSV file here</p>
+            <p class="dropzone-sub">or <button class="link-btn" id="browse-btn">click to browse</button></p>
+          </div>
+          <div class="dropzone-types">
+            <span class="type-badge">.csv</span>
+            <span class="type-badge">UTF-8</span>
+            <span class="type-badge">Max 500 MB</span>
+          </div>
+        </div>
+        <!-- Processing overlay -->
+        <div class="processing-overlay" id="processing-overlay" style="display:none;">
+          <div class="processing-spinner"></div>
+          <p class="processing-label" id="processing-label">Parsing CSV…</p>
+          <div class="processing-bar-wrap">
+            <div class="processing-bar" id="processing-bar"></div>
+          </div>
+          <p class="processing-sub" id="processing-sub">0 rows processed</p>
+        </div>
+      </div>
+
+      <!-- File info after upload -->
+      <div class="file-info-card" id="file-info-card" style="display:none;">
+        <div class="file-info-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="2" width="14" height="20" rx="2" stroke="#30D158" stroke-width="1.8"/>
+            <path d="M7 7H13M7 11H13M7 15H10" stroke="#30D158" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="file-info-text">
+          <p class="file-name" id="file-name-display">—</p>
+          <p class="file-meta" id="file-meta-display">—</p>
+        </div>
+        <!-- Dataset type badge -->
+        <div class="dataset-type-badge" id="dataset-type-badge" style="display:none;">
+          <span class="ds-icon" id="ds-icon">📊</span>
+          <span id="ds-type-label">Detecting…</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="clear-btn">Clear</button>
+        <button class="btn btn-primary" id="validate-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8L6.5 11.5L13 5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Run Validation
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VALIDATION RESULTS ── -->
+  <section class="section section-dark" id="validation-section" style="display:none;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-chip">Step 2</div>
+        <h2 class="section-title">Validation Report</h2>
+        <p class="section-subtitle" id="validation-subtitle">—</p>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="summary-grid" id="summary-grid">
+        <div class="summary-card summary-total">
+          <div class="summary-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <rect x="2" y="2" width="18" height="18" rx="4" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M6 7H16M6 11H16M6 15H11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="summary-text">
+            <span class="summary-num" id="sum-total">0</span>
+            <span class="summary-label">Total Rows</span>
+          </div>
+        </div>
+        <div class="summary-card summary-pass">
+          <div class="summary-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <circle cx="11" cy="11" r="9" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M7 11L10 14L15 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="summary-text">
+            <span class="summary-num" id="sum-pass">0</span>
+            <span class="summary-label">Passed</span>
+          </div>
+        </div>
+        <div class="summary-card summary-warn">
+          <div class="summary-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M11 3L20 19H2L11 3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M11 9V13M11 16V16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="summary-text">
+            <span class="summary-num" id="sum-warn">0</span>
+            <span class="summary-label">Warnings</span>
+          </div>
+        </div>
+        <div class="summary-card summary-error">
+          <div class="summary-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <circle cx="11" cy="11" r="9" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M8 8L14 14M14 8L8 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="summary-text">
+            <span class="summary-num" id="sum-error">0</span>
+            <span class="summary-label">Errors</span>
+          </div>
+        </div>
+        <div class="summary-card summary-dup">
+          <div class="summary-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <rect x="7" y="7" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M7 15H5a2 2 0 01-2-2V5a2 2 0 012-2h8a2 2 0 012 2v2" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </div>
+          <div class="summary-text">
+            <span class="summary-num" id="sum-dup">0</span>
+            <span class="summary-label">Duplicates</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Ring Visual -->
+      <div class="quality-ring-wrap">
+        <svg class="quality-ring" width="160" height="160" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="66" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="12"/>
+          <circle cx="80" cy="80" r="66" fill="none" stroke="url(#ringGrad)" stroke-width="12"
+            stroke-linecap="round" stroke-dasharray="414.69" stroke-dashoffset="414.69"
+            id="quality-arc" transform="rotate(-90 80 80)"/>
+          <defs>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="160" y2="0">
+              <stop offset="0%" stop-color="#30D158"/>
+              <stop offset="100%" stop-color="#0A84FF"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="quality-ring-label">
+          <span class="quality-pct" id="quality-pct">—</span>
+          <span class="quality-sub">Data Quality</span>
+        </div>
+      </div>
+
+      <!-- Error Table -->
+      <div class="error-table-wrap" id="error-table-wrap">
+        <div class="table-toolbar">
+          <h3 class="table-title">Issue Details</h3>
+          <div class="table-filters">
+            <button class="filter-btn active" data-filter="all" id="filter-all">All</button>
+            <button class="filter-btn" data-filter="error" id="filter-error">Errors</button>
+            <button class="filter-btn" data-filter="warning" id="filter-warning">Warnings</button>
+            <button class="filter-btn" data-filter="duplicate" id="filter-dup">Duplicates</button>
+          </div>
+          <div class="table-search-wrap">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <circle cx="6" cy="6" r="4.5" stroke="#8E8E93" stroke-width="1.5"/>
+              <path d="M9.5 9.5L12 12" stroke="#8E8E93" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <input type="text" id="table-search" class="table-search" placeholder="Filter by column, row..." />
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="error-table" id="error-table">
+            <thead>
+              <tr>
+                <th>Row</th>
+                <th>Column</th>
+                <th>Value</th>
+                <th>Type</th>
+                <th>Error</th>
+                <th>Suggested Fix</th>
+              </tr>
+            </thead>
+            <tbody id="error-tbody"></tbody>
+          </table>
+          <div class="table-empty" id="table-empty" style="display:none;">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <circle cx="24" cy="24" r="20" stroke="#30D158" stroke-width="2"/>
+              <path d="M16 24L21 29L32 18" stroke="#30D158" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <p>No issues found for this filter</p>
+          </div>
+        </div>
+        <div class="table-pagination" id="table-pagination">
+          <span class="pagination-info" id="pagination-info">—</span>
+          <div class="pagination-controls">
+            <button class="page-btn" id="page-prev" disabled>‹ Prev</button>
+            <span class="page-num" id="page-num">1</span>
+            <button class="page-btn" id="page-next">Next ›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DATA PREVIEW ── -->
+  <section class="section" id="preview-section" style="display:none;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-chip">Preview</div>
+        <h2 class="section-title">Data Preview</h2>
+        <p class="section-subtitle">First 50 rows of your dataset with inline validation highlights.</p>
+      </div>
+      <div class="preview-table-wrap">
+        <table class="preview-table" id="preview-table">
+          <thead id="preview-thead"></thead>
+          <tbody id="preview-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COLUMN PROFILE ── -->
+  <section class="section section-dark" id="profile-section" style="display:none;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-chip">Analytics</div>
+        <h2 class="section-title">Column Profiles</h2>
+        <p class="section-subtitle">Statistical summary of each detected column in your dataset.</p>
+      </div>
+      <div class="profile-grid" id="profile-grid"></div>
+    </div>
+  </section>
+
+  <!-- ── EXPORT ── -->
+  <section class="section" id="export-section" style="display:none;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-chip">Step 3</div>
+        <h2 class="section-title">Export & Download</h2>
+        <p class="section-subtitle">Download your cleaned dataset or split it into manageable chunks.</p>
+      </div>
+      <div class="export-grid">
+        <!-- Cleaned File -->
+        <div class="export-card" id="export-cleaned-card">
+          <div class="export-card-icon export-icon-blue">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M10 4H22C23.1 4 24 4.9 24 6V22L18 28H10C8.9 28 8 27.1 8 26V6C8 4.9 8.9 4 10 4Z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M18 28V22H24" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M12 13L15 16L20 11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="export-card-body">
+            <h3 class="export-card-title">Cleaned Dataset</h3>
+            <p class="export-card-desc">All rows with critical errors removed. Warnings are flagged but retained.</p>
+            <div class="export-meta" id="export-cleaned-meta">—</div>
+          </div>
+          <button class="btn btn-primary" id="download-clean-btn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3V11M8 11L5 8M8 11L11 8" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M3 13H13" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            Download Cleaned
+          </button>
+        </div>
+
+        <!-- Error Report -->
+        <div class="export-card" id="export-error-card">
+          <div class="export-card-icon export-icon-orange">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M16 4L28 26H4L16 4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M16 13V18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="16" cy="22" r="1" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="export-card-body">
+            <h3 class="export-card-title">Error Report</h3>
+            <p class="export-card-desc">All flagged rows with error details, column names, and suggested fixes.</p>
+            <div class="export-meta" id="export-error-meta">—</div>
+          </div>
+          <button class="btn btn-secondary" id="download-errors-btn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3V11M8 11L5 8M8 11L11 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M3 13H13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            Download Errors
+          </button>
+        </div>
+
+        <!-- Chunked Files -->
+        <div class="export-card export-card-full" id="export-chunk-card">
+          <div class="export-card-icon export-icon-purple">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <rect x="4" y="4" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              <rect x="17" y="4" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              <rect x="4" y="17" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              <rect x="17" y="17" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </div>
+          <div class="export-card-body">
+            <h3 class="export-card-title">Split into Chunks</h3>
+            <p class="export-card-desc">Automatically splits the cleaned file into smaller CSV chunks. Ideal for systems with row limits or batch processing pipelines.</p>
+            <div class="chunk-config">
+              <label class="config-label" for="chunk-size-export">Rows per chunk</label>
+              <input type="number" id="chunk-size-export" class="config-input config-input-sm" value="10000" min="100" max="100000" step="100"/>
+            </div>
+            <div class="export-meta" id="export-chunk-meta">—</div>
+          </div>
+          <div class="chunk-actions">
+            <button class="btn btn-secondary" id="preview-chunks-btn">Preview Chunks</button>
+            <button class="btn btn-primary" id="download-chunks-btn">Download All Chunks</button>
+          </div>
+          <!-- Chunk preview list -->
+          <div class="chunk-list" id="chunk-list" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="nav-logo-inline">DataVault</span>
+        <span class="footer-tagline">Built for the Xeno Implementation Internship Assignment</span>
+      </div>
+      <div class="footer-links">
+        <span>Transaction Validation Engine v1.0</span>
+        <span>·</span>
+        <span>MySQL 8.0 Compatible</span>
+        <span>·</span>
+        <span>20+ Country Phone Formats</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notifications -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="validators.js"></script>
+  <script src="processor.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
