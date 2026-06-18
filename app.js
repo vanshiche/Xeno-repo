@@ -5,16 +5,18 @@
 
 /* ── State ──────────────────────────────────────────────────────────────────── */
 const STATE = {
-  file:         null,
-  parsed:       null,   // { headers, rows, rowCount }
-  validation:   null,   // { issues, cleanRows, errorRows, colProfiles }
-  fixedRows:    null,   // auto-repaired copy of ALL rows
-  fixSummary:   null,   // { totalFixes, byColumn, fixLog }
-  filteredIssues: [],
-  currentFilter: 'all',
-  currentPage:   1,
-  pageSize:      25,
-  searchQuery:   '',
+  file:                null,
+  parsed:              null,   // { headers, rows, rowCount }
+  validation:          null,   // { issues, cleanRows, errorRows, colProfiles }
+  fixedRows:           null,   // auto-repaired copy of ALL rows
+  fixSummary:          null,   // { totalFixes, byColumn, fixLog }
+  filteredIssues:      [],
+  currentFilter:       'all',
+  analyticsFilterType: null,
+  analyticsFilterCol:  null,
+  currentPage:         1,
+  pageSize:            25,
+  searchQuery:         '',
 };
 
 /* ── DOM Refs ────────────────────────────────────────────────────────────────── */
@@ -112,11 +114,12 @@ function showDatasetBadge(dsType, headers) {
 $('clear-btn').addEventListener('click', () => {
   STATE.file = null; STATE.parsed = null; STATE.validation = null;
   STATE.fixedRows = null; STATE.fixSummary = null;
+  STATE.analyticsFilterType = null; STATE.analyticsFilterCol = null;
   fileInput.value = '';
   $('file-info-card').style.display = 'none';
   $('dataset-type-badge').style.display = 'none';
-  ['validation-section', 'preview-section', 'profile-section', 'export-section'].forEach(id => {
-    $(id).style.display = 'none';
+  ['validation-section', 'preview-section', 'profile-section', 'export-section', 'analytics-section'].forEach(id => {
+    if ($(id)) $(id).style.display = 'none';
   });
 });
 
@@ -212,9 +215,14 @@ function renderValidationResults(parsed, result) {
 
   // Show sections
   $('validation-section').style.display = 'block';
+  $('analytics-section').style.display  = 'block';
   $('preview-section').style.display    = 'block';
   $('profile-section').style.display    = 'block';
   $('export-section').style.display     = 'block';
+
+  // Reset analytics filters
+  STATE.analyticsFilterType = null;
+  STATE.analyticsFilterCol  = null;
 
   // ── Summary cards ──
   const errors   = issues.filter(i => i.type === 'error').length;
@@ -255,6 +263,9 @@ function renderValidationResults(parsed, result) {
   // ── Column profiles ──
   renderProfiles(colProfiles, rows.length);
 
+  // ── Quality Analytics Dashboard ──
+  renderAnalytics(parsed, result);
+
   // ── Export meta ──
   $('export-cleaned-meta').textContent =
     `${cleanRows.length.toLocaleString()} clean rows · ${parsed.headers.length} columns`;
@@ -294,6 +305,12 @@ function applyFilters() {
   let issues = STATE.validation?.issues || [];
   if (STATE.currentFilter !== 'all') {
     issues = issues.filter(i => i.type === STATE.currentFilter);
+  }
+  if (STATE.analyticsFilterType) {
+    issues = issues.filter(i => i.type === STATE.analyticsFilterType);
+  }
+  if (STATE.analyticsFilterCol) {
+    issues = issues.filter(i => i.column === STATE.analyticsFilterCol);
   }
   if (STATE.searchQuery) {
     const q = STATE.searchQuery.toLowerCase();
@@ -561,6 +578,272 @@ function esc(s) {
 function truncate(s, max) {
   if (!s) return '';
   return s.length > max ? s.slice(0, max) + '…' : s;
+}
+
+/* ── Visual Quality Analytics Dashboard ──────────────────────────────────────── */
+function renderAnalytics(parsed, result) {
+  const { rows, headers } = parsed;
+  const { issues, cleanRows } = result;
+
+  const totalRows = rows.length;
+  const warningsCount = issues.filter(i => i.type === 'warning').length;
+  const errorCount = issues.filter(i => i.type === 'error').length;
+  const duplicateCount = issues.filter(i => i.type === 'duplicate').length;
+  const cleanCount = cleanRows.length;
+
+  // 1. Calculate Health Score
+  let healthScore = 100;
+  if (totalRows > 0) {
+    const warningPenalty = warningsCount * 0.15;
+    // Duplicates and errors count as 0-health rows
+    healthScore = Math.max(0, Math.round(((cleanCount - warningPenalty) / totalRows) * 100));
+  }
+
+  // Update gauge text with animation
+  const scoreVal = $('health-score-val');
+  if (scoreVal) {
+    let start = 0;
+    const duration = 1000;
+    const startTime = performance.now();
+    function animateCount(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = progress * (2 - progress); // easeOutQuad
+      const current = Math.round(start + ease * (healthScore - start));
+      scoreVal.textContent = current + '%';
+      if (progress < 1) {
+        requestAnimationFrame(animateCount);
+      }
+    }
+    requestAnimationFrame(animateCount);
+  }
+
+  // Update gauge status text & colors
+  const statusVal = $('health-status-val');
+  if (statusVal) {
+    let status = 'Excellent';
+    if (healthScore < 40) {
+      status = 'Critical';
+      statusVal.style.color = 'var(--accent-red)';
+    } else if (healthScore < 60) {
+      status = 'Needs Work';
+      statusVal.style.color = 'var(--accent-orange)';
+    } else if (healthScore < 80) {
+      status = 'Fair';
+      statusVal.style.color = 'var(--accent-orange)';
+    } else if (healthScore < 95) {
+      status = 'Good';
+      statusVal.style.color = 'var(--accent-blue)';
+    } else {
+      status = 'Excellent';
+      statusVal.style.color = 'var(--accent-green)';
+    }
+    statusVal.textContent = status;
+  }
+
+  // Animate Gauge Arc
+  const gaugeArc = $('health-gauge-arc');
+  if (gaugeArc) {
+    const circ = 2 * Math.PI * 72; // ~452.39
+    gaugeArc.style.strokeDashoffset = circ * (1 - healthScore / 100);
+  }
+
+  // Update metrics numbers
+  if ($('health-clean-rows')) $('health-clean-rows').textContent = cleanCount.toLocaleString();
+  if ($('health-warning-rows')) $('health-warning-rows').textContent = warningsCount.toLocaleString();
+  if ($('health-error-rows')) $('health-error-rows').textContent = errorCount.toLocaleString();
+  if ($('health-dup-rows')) $('health-dup-rows').textContent = duplicateCount.toLocaleString();
+
+  // 2. Issue Type Breakdown (Donut Chart)
+  const totalIssues = errorCount + warningsCount + duplicateCount;
+  const donutGroup = $('donut-slices-group');
+  const donutTotal = $('donut-total-issues');
+  const donutLegend = $('donut-legend');
+
+  if (donutTotal) donutTotal.textContent = totalIssues.toLocaleString();
+
+  if (donutGroup && donutLegend) {
+    donutGroup.innerHTML = '';
+    donutLegend.innerHTML = '';
+
+    const types = [
+      { key: 'error', label: 'Hard Errors', count: errorCount, color: 'var(--accent-red)', dotClass: 'dot-error' },
+      { key: 'warning', label: 'Warnings', count: warningsCount, color: 'var(--accent-orange)', dotClass: 'dot-warning' },
+      { key: 'duplicate', label: 'Duplicates', count: duplicateCount, color: 'var(--accent-purple)', dotClass: 'dot-dup' },
+    ];
+
+    if (totalIssues === 0) {
+      // Draw 100% clean donut
+      donutGroup.innerHTML = `
+        <circle class="donut-slice" cx="85" cy="85" r="65" fill="none" stroke="var(--accent-green)" stroke-width="14"
+          stroke-dasharray="408.41 408.41" stroke-dashoffset="0" style="cursor: default;" />
+      `;
+      donutLegend.innerHTML = `
+        <div class="legend-item" style="cursor: default;">
+          <span class="legend-dot dot-clean"></span>
+          <span class="legend-label-text">All Data Healthy</span>
+          <span class="legend-val-text">100%</span>
+        </div>
+      `;
+    } else {
+      const circ = 2 * Math.PI * 65; // ~408.41
+      let accumAngle = 0;
+
+      types.forEach(t => {
+        const pct = t.count / totalIssues;
+        const sliceCirc = pct * circ;
+        const offset = -accumAngle;
+        accumAngle += sliceCirc;
+
+        if (t.count > 0) {
+          const slice = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          slice.setAttribute('class', 'donut-slice');
+          slice.setAttribute('cx', '85');
+          slice.setAttribute('cy', '85');
+          slice.setAttribute('r', '65');
+          slice.setAttribute('stroke', t.color);
+          slice.setAttribute('stroke-dasharray', `${sliceCirc} ${circ}`);
+          slice.setAttribute('stroke-dashoffset', offset);
+          if (STATE.analyticsFilterType === t.key) {
+            slice.classList.add('active');
+          }
+
+          // Interactive click on slice
+          slice.addEventListener('click', () => {
+            toggleAnalyticsFilter('type', t.key);
+          });
+
+          donutGroup.appendChild(slice);
+        }
+
+        // Render Legend Item
+        const pctText = totalIssues > 0 ? Math.round(t.count / totalIssues * 100) : 0;
+        const legendItem = document.createElement('div');
+        legendItem.className = 'legend-item' + (STATE.analyticsFilterType === t.key ? ' active' : '');
+        legendItem.innerHTML = `
+          <span class="legend-dot ${t.dotClass}"></span>
+          <span class="legend-label-text">${t.label}</span>
+          <span class="legend-val-text">${t.count.toLocaleString()} (${pctText}%)</span>
+        `;
+        legendItem.addEventListener('click', () => {
+          toggleAnalyticsFilter('type', t.key);
+        });
+        donutLegend.appendChild(legendItem);
+      });
+    }
+  }
+
+  // 3. Issue Distribution by Column (Stacked Horizontal Bar Chart)
+  const colIssuesList = $('column-issues-list');
+  if (colIssuesList) {
+    colIssuesList.innerHTML = '';
+
+    // Calculate issues count by column
+    const colIssues = {};
+    headers.forEach(h => {
+      colIssues[h] = { error: 0, warning: 0, duplicate: 0, total: 0 };
+    });
+
+    issues.forEach(i => {
+      const col = i.column;
+      const type = i.type;
+      if (colIssues[col]) {
+        colIssues[col][type]++;
+        colIssues[col].total++;
+      }
+    });
+
+    // Determine column type map for tagging
+    const colTypes = {};
+    headers.forEach(h => {
+      colTypes[h] = detectColumnType(h);
+    });
+
+    // Sort: most issues first, then normal columns
+    const sortedCols = [...headers].sort((a, b) => {
+      const countA = colIssues[a].total;
+      const countB = colIssues[b].total;
+      if (countA !== countB) return countB - countA; // DESC issues
+      return a.localeCompare(b); // Alphabetical tie-breaker
+    });
+
+    sortedCols.forEach(col => {
+      const stats = colIssues[col];
+      const errPct = totalRows > 0 ? (stats.error / totalRows * 100) : 0;
+      const warnPct = totalRows > 0 ? (stats.warning / totalRows * 100) : 0;
+      const dupPct = totalRows > 0 ? (stats.duplicate / totalRows * 100) : 0;
+      const passPct = Math.max(0, 100 - errPct - warnPct - dupPct);
+
+      const colRow = document.createElement('div');
+      colRow.className = 'column-issue-row' + (STATE.analyticsFilterCol === col ? ' active' : '');
+      colRow.innerHTML = `
+        <div class="col-info-row">
+          <span class="col-name-text">
+            ${esc(col)}
+            <span class="col-type-tag">${esc(colTypes[col])}</span>
+          </span>
+          <span class="col-issue-count" style="color: ${stats.total > 0 ? 'var(--text-primary)' : 'var(--accent-green)'}">
+            ${stats.total > 0 ? `${stats.total.toLocaleString()} issue${stats.total !== 1 ? 's' : ''}` : 'Healthy'}
+          </span>
+        </div>
+        <div class="col-stacked-bar">
+          <div class="stacked-segment segment-error" style="width: ${errPct}%" title="Errors: ${stats.error.toLocaleString()} (${errPct.toFixed(1)}%)"></div>
+          <div class="stacked-segment segment-warning" style="width: ${warnPct}%" title="Warnings: ${stats.warning.toLocaleString()} (${warnPct.toFixed(1)}%)"></div>
+          <div class="stacked-segment segment-duplicate" style="width: ${dupPct}%" title="Duplicates: ${stats.duplicate.toLocaleString()} (${dupPct.toFixed(1)}%)"></div>
+          <div class="stacked-segment segment-passed" style="width: ${passPct}%" title="Passed: ${(totalRows - stats.total).toLocaleString()} (${passPct.toFixed(1)}%)"></div>
+        </div>
+      `;
+
+      colRow.addEventListener('click', () => {
+        toggleAnalyticsFilter('col', col);
+      });
+
+      colIssuesList.appendChild(colRow);
+    });
+  }
+
+  // Update Reset button visibility
+  const resetBtn = $('analytics-reset-filter');
+  if (resetBtn) {
+    resetBtn.style.display = (STATE.analyticsFilterType || STATE.analyticsFilterCol) ? 'inline-block' : 'none';
+  }
+}
+
+function toggleAnalyticsFilter(filterType, value) {
+  if (filterType === 'type') {
+    if (STATE.analyticsFilterType === value) {
+      STATE.analyticsFilterType = null; // Toggle off
+    } else {
+      STATE.analyticsFilterType = value;
+      STATE.analyticsFilterCol = null; // Clear other chart filters
+    }
+  } else if (filterType === 'col') {
+    if (STATE.analyticsFilterCol === value) {
+      STATE.analyticsFilterCol = null; // Toggle off
+    } else {
+      STATE.analyticsFilterCol = value;
+      STATE.analyticsFilterType = null; // Clear other chart filters
+    }
+  }
+
+  // Sync Issues Table and Re-render Chart states
+  applyFilters();
+  renderIssueTable();
+
+  // Re-run renderAnalytics to update highlights/active states on cards
+  renderAnalytics(STATE.parsed, STATE.validation);
+}
+
+// Reset button listener wire-up
+const resetFilterBtn = $('analytics-reset-filter');
+if (resetFilterBtn) {
+  resetFilterBtn.addEventListener('click', () => {
+    STATE.analyticsFilterType = null;
+    STATE.analyticsFilterCol = null;
+    applyFilters();
+    renderIssueTable();
+    renderAnalytics(STATE.parsed, STATE.validation);
+  });
 }
 
 /* ── Init ───────────────────────────────────────────────────────────────────── */

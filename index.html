@@ -389,6 +389,116 @@
     </div>
   </section>
 
+  <!-- ── ANALYTICS DASHBOARD ── -->
+  <section class="section section-dark" id="analytics-section" style="display:none;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-chip">Analytics</div>
+        <h2 class="section-title">Visual Quality Dashboard</h2>
+        <p class="section-subtitle">Real-time health insights, issue distributions, and column compliance metrics.</p>
+      </div>
+
+      <div class="analytics-layout">
+        <!-- Card 1: Data Health Score -->
+        <div class="analytics-card card-health">
+          <div class="card-header-row">
+            <h3 class="card-title">Data Health Score</h3>
+            <span class="card-icon">🏥</span>
+          </div>
+          <div class="health-display">
+            <!-- Animated SVG Gauge -->
+            <div class="gauge-container">
+              <svg class="health-gauge" width="180" height="180" viewBox="0 0 180 180">
+                <!-- Track -->
+                <circle class="gauge-bg" cx="90" cy="90" r="72" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="12" />
+                <!-- Glowing fill -->
+                <circle class="gauge-fill" cx="90" cy="90" r="72" fill="none" stroke="url(#gaugeGrad)" stroke-width="12"
+                  stroke-linecap="round" stroke-dasharray="452.39" stroke-dashoffset="452.39"
+                  id="health-gauge-arc" transform="rotate(-90 90 90)" />
+                <defs>
+                  <linearGradient id="gaugeGrad" x1="0" y1="0" x2="180" y2="180">
+                    <stop offset="0%" stop-color="#bf5af2" />
+                    <stop offset="50%" stop-color="#0a84ff" />
+                    <stop offset="100%" stop-color="#30d158" />
+                  </linearGradient>
+                  <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="6" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                  </filter>
+                </defs>
+              </svg>
+              <div class="gauge-text">
+                <span class="gauge-score" id="health-score-val">0%</span>
+                <span class="gauge-status" id="health-status-val">Loading</span>
+              </div>
+            </div>
+            <div class="health-metrics">
+              <div class="health-metric">
+                <span class="metric-dot dot-clean"></span>
+                <span class="metric-label">Clean Rows</span>
+                <span class="metric-value" id="health-clean-rows">0</span>
+              </div>
+              <div class="health-metric">
+                <span class="metric-dot dot-warning"></span>
+                <span class="metric-label">Warnings</span>
+                <span class="metric-value" id="health-warning-rows">0</span>
+              </div>
+              <div class="health-metric">
+                <span class="metric-dot dot-error"></span>
+                <span class="metric-label">Hard Errors</span>
+                <span class="metric-value" id="health-error-rows">0</span>
+              </div>
+              <div class="health-metric">
+                <span class="metric-dot dot-dup"></span>
+                <span class="metric-label">Duplicates</span>
+                <span class="metric-value" id="health-dup-rows">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Issue Type Distribution -->
+        <div class="analytics-card card-donut">
+          <div class="card-header-row">
+            <h3 class="card-title">Issue Type Breakdown</h3>
+            <span class="card-icon">🍩</span>
+          </div>
+          <div class="donut-display">
+            <div class="donut-chart-container">
+              <svg class="donut-chart" width="170" height="170" viewBox="0 0 170 170">
+                <circle class="donut-bg" cx="85" cy="85" r="65" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="14" />
+                <g id="donut-slices-group"></g>
+              </svg>
+              <div class="donut-center">
+                <span class="donut-total" id="donut-total-issues">0</span>
+                <span class="donut-label">Issues</span>
+              </div>
+            </div>
+            <div class="donut-legend" id="donut-legend">
+              <!-- Legend items injected dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Issue Distribution by Column -->
+        <div class="analytics-card card-columns">
+          <div class="card-header-row">
+            <div class="title-with-reset">
+              <h3 class="card-title">Issues by Column</h3>
+              <button class="analytics-reset-btn" id="analytics-reset-filter" style="display: none;">Reset Filter</button>
+            </div>
+            <span class="card-icon">📊</span>
+          </div>
+          <div class="column-issues-list-wrap">
+            <div class="column-issues-list" id="column-issues-list">
+              <!-- Dynamic columns with stacked bars -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ── DATA PREVIEW ── -->
   <section class="section" id="preview-section" style="display:none;">
     <div class="container">
