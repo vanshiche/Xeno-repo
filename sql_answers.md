@@ -7,7 +7,7 @@
 
 ### Q1. What steps would you take to review data before importing it into a system?
 
-Before importing the CSV, I would first perform **schema and structural validation** — verifying column names, data types, and row count match the expected contract, checking for extra or missing columns. Next, I would run **data quality checks** — scanning for NULL values in mandatory fields (customer_id, email, phone), flagging duplicate customer_id entries, and verifying that signup_date values conform to a consistent date format with no future dates or impossible values. Finally, I would apply **business rule validation** — confirming phone numbers match the expected regional format, emails contain a valid domain, and city values belong to a known reference list before the data is loaded into the production table.
+First, I inspect the file structure — verifying column names, data types, row count, and checking for missing or extra columns against the expected schema. Next, I run data quality checks — scanning for NULL values in mandatory fields (customer_id, phone), duplicate entries, and ensuring signup_date follows a consistent, valid date format. Finally, I apply business rule validation — confirming phone numbers match the regional format, emails contain a valid domain, and no impossible values (e.g., future dates, negative IDs) exist before loading into the system.
 
 ---
 
