@@ -14,6 +14,8 @@ const STATE = {
   currentFilter:       'all',
   analyticsFilterType: null,
   analyticsFilterCol:  null,
+  activeSqlTab:        'create',
+  sqlScripts:          null,
   currentPage:         1,
   pageSize:            25,
   searchQuery:         '',
@@ -115,6 +117,9 @@ $('clear-btn').addEventListener('click', () => {
   STATE.file = null; STATE.parsed = null; STATE.validation = null;
   STATE.fixedRows = null; STATE.fixSummary = null;
   STATE.analyticsFilterType = null; STATE.analyticsFilterCol = null;
+  STATE.activeSqlTab = 'create'; STATE.sqlScripts = null;
+  const sqlDisplay = $('sql-code-display');
+  if (sqlDisplay) sqlDisplay.textContent = '-- Run validation to generate SQL script --';
   fileInput.value = '';
   $('file-info-card').style.display = 'none';
   $('dataset-type-badge').style.display = 'none';
@@ -265,6 +270,9 @@ function renderValidationResults(parsed, result) {
 
   // ── Quality Analytics Dashboard ──
   renderAnalytics(parsed, result);
+
+  // ── SQL Query Generator ──
+  renderSQLGenerator(parsed, result);
 
   // ── Export meta ──
   $('export-cleaned-meta').textContent =
@@ -843,6 +851,277 @@ if (resetFilterBtn) {
     applyFilters();
     renderIssueTable();
     renderAnalytics(STATE.parsed, STATE.validation);
+  });
+}
+
+/* ── SQL Query Generator ────────────────────────────────────────────────────── */
+function renderSQLGenerator(parsed, result) {
+  if (!parsed || !result) return;
+  const { headers, rows } = parsed;
+  const { cleanRows, colProfiles } = result;
+
+  const tableName = (STATE.file?.name || 'imported_data')
+    .replace(/\.csv$/i, '')
+    .replace(/[^a-zA-Z0-9_]/g, '_')
+    .toLowerCase();
+
+  // 1. Inferred CREATE TABLE SQL
+  const createSQL = generateCreateTableSQL(headers, colProfiles, tableName);
+
+  // 2. INSERT INTO SQL (Full + Preview)
+  const { full: insertSQLFull, preview: insertSQLPreview } = generateInsertSQL(headers, cleanRows, tableName, 50);
+
+  // 3. ALTER TABLE SQL
+  const alterSQL = generateAlterSQL(headers, tableName);
+
+  // Cache in STATE
+  STATE.sqlScripts = {
+    create: createSQL,
+    insert: insertSQLPreview,
+    insertFull: insertSQLFull,
+    alter: alterSQL,
+    full: `${createSQL}\n\n${insertSQLFull}\n\n${alterSQL}`
+  };
+
+  // Update UI displays
+  updateSqlTerminalDisplay();
+  
+  // Update meta
+  const totalClean = cleanRows.length;
+  const sqlMeta = $('export-sql-meta');
+  if (sqlMeta) {
+    sqlMeta.textContent = `Inferred ${headers.length} columns from ${totalClean.toLocaleString()} clean rows.`;
+  }
+}
+
+function generateCreateTableSQL(headers, colProfiles, tableName) {
+  const typeMap = {
+    id: 'VARCHAR(100)',
+    email: 'VARCHAR(150)',
+    phone: 'VARCHAR(30)',
+    date: 'DATE',
+    time: 'TIME',
+    amount: 'DECIMAL(12, 2)',
+    quantity: 'INT',
+    sku: 'VARCHAR(50)',
+    default: 'VARCHAR(255)'
+  };
+
+  const colDefs = colProfiles.map(p => {
+    const name = p.name;
+    const sqlType = typeMap[p.type] || typeMap.default;
+    
+    // If it is the ID column, make it primary key
+    const isPrimaryKey = p.type === 'id';
+    const nullable = isPrimaryKey ? 'NOT NULL' : 'NULL';
+    const primary = isPrimaryKey ? ' PRIMARY KEY' : '';
+    
+    return `  \`${name}\` ${sqlType} ${nullable}${primary}`;
+  });
+
+  return `-- 1. Inferred Schema Definition for table \`${tableName}\`\n` +
+         `CREATE TABLE IF NOT EXISTS \`${tableName}\` (\n` +
+         colDefs.join(',\n') +
+         `\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`;
+}
+
+function escapeSQL(val) {
+  if (val === null || val === undefined) return 'NULL';
+  const s = String(val).trim();
+  if (s === '' || s.toLowerCase() === 'null') return 'NULL';
+  // Escape backslashes and single quotes for SQL safety
+  return `'` + s.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + `'`;
+}
+
+function generateInsertSQL(headers, cleanRows, tableName, limit = 50) {
+  if (cleanRows.length === 0) {
+    const emptyMsg = `-- No clean rows available to generate insert statements.`;
+    return { full: emptyMsg, preview: emptyMsg };
+  }
+
+  const colsPart = headers.map(h => `\`${h}\``).join(', ');
+
+  // Generate SQL batching helper
+  const buildInsertBatch = (rows) => {
+    const batchSize = 100;
+    const statements = [];
+    
+    for (let i = 0; i < rows.length; i += batchSize) {
+      const chunk = rows.slice(i, i + batchSize);
+      const valuesPart = chunk.map(row => {
+        const vals = headers.map(h => escapeSQL(row[h]));
+        return `(${vals.join(', ')})`;
+      }).join(',\n  ');
+      
+      statements.push(`INSERT INTO \`${tableName}\` (${colsPart}) VALUES\n  ${valuesPart};`);
+    }
+    
+    return statements.join('\n\n');
+  };
+
+  const previewRows = cleanRows.slice(0, limit);
+  const previewInsert = `-- 2. Seeds (Showing first ${previewRows.length} of ${cleanRows.length} clean rows)\n` +
+                        buildInsertBatch(previewRows);
+  const fullInsert = `-- 2. Seeds (Complete dataset of ${cleanRows.length} clean rows)\n` +
+                     buildInsertBatch(cleanRows);
+
+  return { full: fullInsert, preview: previewInsert };
+}
+
+function generateAlterSQL(headers, tableName) {
+  const hasEmail = headers.some(h => detectColumnType(h) === 'email');
+  const nameCol = headers.find(h => ['name', 'customer_name', 'first_name', 'full_name'].includes(h.toLowerCase()));
+  const dateCol = headers.find(h => detectColumnType(h) === 'date');
+
+  let sql = `-- 3. Enrichment Transformations (Part 2 Assignment Rules)\n`;
+  let hasAny = false;
+
+  if (hasEmail) {
+    const emailCol = headers.find(h => detectColumnType(h) === 'email');
+    sql += `-- Add is_gmail column indicating Google Mail users\n` +
+           `ALTER TABLE \`${tableName}\` ADD COLUMN \`is_gmail\` TINYINT(1) DEFAULT 0;\n` +
+           `UPDATE \`${tableName}\` SET \`is_gmail\` = CASE WHEN \`${emailCol}\` LIKE '%@gmail.com' THEN 1 ELSE 0 END;\n\n`;
+    hasAny = true;
+  }
+
+  if (nameCol) {
+    sql += `-- Add first_name column extracted from full name\n` +
+           `ALTER TABLE \`${tableName}\` ADD COLUMN \`first_name\` VARCHAR(100) NULL;\n` +
+           `UPDATE \`${tableName}\` SET \`first_name\` = SUBSTRING_INDEX(TRIM(\`${nameCol}\`), ' ', 1);\n\n`;
+    hasAny = true;
+  }
+
+  if (dateCol) {
+    sql += `-- Add signup_month column representing the month name of signup_date\n` +
+           `ALTER TABLE \`${tableName}\` ADD COLUMN \`signup_month\` VARCHAR(30) NULL;\n` +
+           `UPDATE \`${tableName}\` SET \`signup_month\` = MONTHNAME(\`${dateCol}\`);\n\n`;
+    hasAny = true;
+  }
+
+  if (!hasAny) {
+    sql += `-- No email, name, or date columns detected for Part 2 transformations.`;
+  }
+
+  return sql;
+}
+
+function highlightSQL(code) {
+  if (!code) return '';
+  
+  let escText = code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // SQL syntax highlighting patterns
+  // 1. Comments
+  escText = escText.replace(/(--.*)/g, '<span class="sql-comment">$1</span>');
+
+  // 2. Keywords
+  const keywords = [
+    'CREATE TABLE', 'IF NOT EXISTS', 'ENGINE', 'DEFAULT CHARSET', 'COLLATE',
+    'INSERT INTO', 'VALUES', 'ALTER TABLE', 'ADD COLUMN', 'UPDATE', 'SET',
+    'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'LIKE', 'PRIMARY KEY', 'NOT NULL', 'NULL', 'DEFAULT'
+  ];
+  
+  keywords.forEach(kw => {
+    const regex = new RegExp(`\\b(${kw})\\b`, 'gi');
+    escText = escText.replace(regex, '<span class="sql-keyword">$1</span>');
+  });
+
+  // 3. Data Types
+  const datatypes = ['VARCHAR', 'DECIMAL', 'INT', 'DATE', 'TIME', 'TINYINT', 'InnoDB'];
+  datatypes.forEach(dt => {
+    const regex = new RegExp(`\\b(${dt})\\b`, 'gi');
+    escText = escText.replace(regex, '<span class="sql-type">$1</span>');
+  });
+
+  // 4. String literals: single quotes
+  escText = escText.replace(/('[^']*')/g, '<span class="sql-string">$1</span>');
+
+  // 5. Numeric literals
+  escText = escText.replace(/\b(\d+)\b/g, '<span class="sql-number">$1</span>');
+
+  return escText;
+}
+
+function updateSqlTerminalDisplay() {
+  const tab = STATE.activeSqlTab || 'create';
+  const display = $('sql-code-display');
+  const filename = $('terminal-filename');
+  
+  if (!display || !STATE.sqlScripts) return;
+
+  const codeText = STATE.sqlScripts[tab] || '-- Run validation to generate SQL script --';
+  display.innerHTML = highlightSQL(codeText);
+
+  if (filename) {
+    const names = {
+      create: 'schema.sql',
+      insert: 'seeds.sql',
+      alter: 'enrichment.sql'
+    };
+    filename.textContent = names[tab] || 'schema.sql';
+  }
+}
+
+// SQL Tab Switching
+document.querySelectorAll('.sql-tab').forEach(tabBtn => {
+  tabBtn.addEventListener('click', () => {
+    document.querySelectorAll('.sql-tab').forEach(t => t.classList.remove('active'));
+    tabBtn.classList.add('active');
+    STATE.activeSqlTab = tabBtn.dataset.tab;
+    updateSqlTerminalDisplay();
+  });
+});
+
+// Copy SQL Button
+const copySqlBtn = $('copy-sql-btn');
+if (copySqlBtn) {
+  copySqlBtn.addEventListener('click', () => {
+    if (!STATE.sqlScripts) return;
+    const tab = STATE.activeSqlTab || 'create';
+    const textToCopy = tab === 'insert' ? STATE.sqlScripts.insertFull : STATE.sqlScripts[tab];
+    
+    if (!textToCopy) {
+      toast('Nothing to Copy', 'Please upload and validate a file first.', 'warning');
+      return;
+    }
+
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => {
+        const originalText = copySqlBtn.textContent;
+        copySqlBtn.textContent = 'Copied! ✓';
+        setTimeout(() => {
+          copySqlBtn.textContent = originalText;
+        }, 2000);
+        toast('SQL Copied', 'SQL query copied to clipboard.', 'success');
+      })
+      .catch(err => {
+        toast('Copy Failed', 'Failed to copy text: ' + err, 'error');
+      });
+  });
+}
+
+// Download SQL script Button
+const downloadSqlBtn = $('download-sql-btn');
+if (downloadSqlBtn) {
+  downloadSqlBtn.addEventListener('click', () => {
+    if (!STATE.sqlScripts || !STATE.sqlScripts.full) {
+      toast('Nothing to Download', 'Please upload and validate a file first.', 'warning');
+      return;
+    }
+    const baseName = (STATE.file?.name || 'migration').replace(/\.csv$/i, '');
+    const blob = new Blob([STATE.sqlScripts.full], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseName}_migration.sql`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('SQL Downloaded', 'Full migration script downloaded successfully.', 'success');
   });
 }
 

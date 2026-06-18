@@ -647,6 +647,55 @@
           <!-- Chunk preview list -->
           <div class="chunk-list" id="chunk-list" style="display:none;"></div>
         </div>
+
+        <!-- SQL Migration Script -->
+        <div class="export-card export-card-full" id="export-sql-card">
+          <div class="export-card-icon export-icon-cyan">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M6 8C6 5.79086 10.4772 4 16 4C21.5228 4 26 5.79086 26 8M6 8C6 10.2091 10.4772 12 16 12C21.5228 12 26 10.2091 26 8M6 8V14C6 16.2091 10.4772 18 16 18C21.5228 18 26 16.2091 26 14V8M6 14V20C6 22.2091 10.4772 24 16 24C21.5228 24 26 22.2091 26 20V14M6 20V26C6 28.2091 10.4772 30 16 30C21.5228 30 26 28.2091 26 26V20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="export-card-body">
+            <h3 class="export-card-title">SQL Migration Script</h3>
+            <p class="export-card-desc">Auto-generate ready-to-run MySQL scripts tailored to this dataset. Inferred schemas, insert seeds, and transformation alters.</p>
+            
+            <!-- SQL Tab bar -->
+            <div class="sql-tabs-bar">
+              <div class="sql-tabs">
+                <button class="sql-tab active" data-tab="create" id="sql-tab-create">Schema (CREATE)</button>
+                <button class="sql-tab" data-tab="insert" id="sql-tab-insert">Seeds (INSERT)</button>
+                <button class="sql-tab" data-tab="alter" id="sql-tab-alter">Enrichment (ALTER)</button>
+              </div>
+              <button class="btn btn-secondary btn-sm" id="copy-sql-btn">
+                Copy SQL
+              </button>
+            </div>
+
+            <!-- Terminal Mockup Panel -->
+            <div class="sql-terminal">
+              <div class="terminal-header">
+                <span class="terminal-dot dot-red"></span>
+                <span class="terminal-dot dot-yellow"></span>
+                <span class="terminal-dot dot-green"></span>
+                <span class="terminal-title" id="terminal-filename">schema.sql</span>
+              </div>
+              <div class="terminal-body">
+                <pre><code class="sql-code" id="sql-code-display">-- Run validation to generate SQL script --</code></pre>
+              </div>
+            </div>
+            
+            <div class="export-meta" id="export-sql-meta">Infers schemas and constraints from clean rows.</div>
+          </div>
+          <div class="chunk-actions">
+            <button class="btn btn-primary" id="download-sql-btn">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 3V11M8 11L5 8M8 11L11 8" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M3 13H13" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              Download Migration Script (.sql)
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
