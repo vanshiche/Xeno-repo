@@ -540,10 +540,47 @@ a { text-decoration: none; color: inherit; }
 .export-icon-blue   { background: rgba(10,132,255,0.1); color: var(--accent-blue); }
 .export-icon-orange { background: rgba(255,159,10,0.1); color: var(--accent-orange); }
 .export-icon-purple { background: rgba(191,90,242,0.1); color: var(--accent-purple); }
+.export-icon-green  { background: rgba(48,209,88,0.1);  color: var(--accent-green); }
 .export-card-body { flex: 1; }
 .export-card-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
 .export-card-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
 .export-meta { font-size: 12px; color: var(--text-tertiary); margin-top: 8px; }
+
+/* ── Auto-Fix Card extras ── */
+.btn-green {
+  background: var(--accent-green);
+  color: #000;
+  box-shadow: 0 4px 12px rgba(48,209,88,0.35);
+}
+.btn-green:hover {
+  background: #3ee06a;
+  box-shadow: 0 6px 20px rgba(48,209,88,0.5);
+  transform: translateY(-1px);
+}
+.btn-green:active { transform: translateY(0); }
+
+.autofix-title-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+}
+.autofix-badge {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: var(--radius-pill);
+  background: rgba(48,209,88,0.12); border: 1px solid rgba(48,209,88,0.28);
+  font-size: 11px; font-weight: 700; color: var(--accent-green);
+  letter-spacing: 0.3px; white-space: nowrap;
+}
+.autofix-breakdown {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;
+}
+.autofix-chip {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: var(--radius-pill);
+  background: rgba(48,209,88,0.08); border: 1px solid rgba(48,209,88,0.18);
+  font-size: 11px; font-weight: 600; color: var(--accent-green);
+  font-family: 'SF Mono', 'Menlo', monospace;
+  animation: fade-up 0.3s ease both;
+}
+
 .chunk-config { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
 .chunk-actions { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
 .chunk-list {

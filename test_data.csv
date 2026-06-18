@@ -1,0 +1,121 @@
+order_id,customer_id,full_name,email,phone_number,city,signup_date,order_date,order_time,sku,product_name,quantity,unit_price,total_amount,payment_mode,order_status,payment_status
+ORD001,CUST001,Arjun Sharma,arjun.sharma@gmail.com,9876543210,Mumbai,15-03-2022,10-04-2024,14:30,SKU-101,Wireless Earphones,2,1299,2598,UPI,Delivered,Paid
+ORD002,CUST002,Priya Mehta,priya.mehta@yahoo.com,8765432109,Delhi,22-07-2021,12-04-2024,09:15,SKU-102,Smart Watch,1,4999,4999,Card,Shipped,Paid
+ORD003,CUST003,Rahul Gupta,rahul.g@company.in,7654321098,Bangalore,01-01-2020,08-04-2024,11:45,SKU-103,Running Shoes,1,2499,2499,Cash,Delivered,Paid
+ORD004,CUST004,Sneha Patel,sneha.patel@hotmail.com,9123456789,Ahmedabad,18-05-2023,14-04-2024,16:20,SKU-104,Yoga Mat,3,599,1797,UPI,Processing,Pending
+ORD005,CUST005,Vikram Singh,vikram.singh@outlook.com,8234567890,Jaipur,30-09-2022,09-04-2024,10:00,SKU-105,Protein Powder,2,1799,3598,Net Banking,Confirmed,Paid
+ORD006,CUST006,Neha Joshi,neha.joshi@gmail.com,7345678901,Pune,12-12-2021,11-04-2024,13:30,SKU-106,Bluetooth Speaker,1,2999,2999,Card,Delivered,Paid
+ORD007,CUST007,Karan Malhotra,karan.m@business.com,6456789012,Chennai,25-08-2023,07-04-2024,08:45,SKU-107,Laptop Stand,2,799,1598,Cash,Shipped,Paid
+ORD008,CUST008,Anjali Reddy,anjali.reddy@gmail.com,9567890123,Hyderabad,03-03-2022,13-04-2024,15:10,SKU-108,Coffee Maker,1,3499,3499,UPI,Delivered,Paid
+ORD009,CUST009,Rohan Desai,rohan.desai@yahoo.com,8678901234,Kolkata,17-06-2021,06-04-2024,12:00,SKU-109,Water Bottle,4,299,1196,EMI,Processing,Partial
+ORD010,CUST010,Pooja Nair,pooja.nair@gmail.com,7789012345,Kochi,09-11-2022,15-04-2024,17:30,SKU-110,Backpack,1,1499,1499,Cash,Confirmed,Paid
+ORD011,CUST011,Amit Verma,amit.verma@company.in,9890123456,Lucknow,28-02-2023,05-04-2024,09:30,SKU-111,USB Hub,3,599,1797,Card,Delivered,Paid
+ORD012,CUST012,Deepa Iyer,deepa.iyer@gmail.com,8901234567,Nagpur,14-04-2021,16-04-2024,11:15,SKU-112,Desk Lamp,1,899,899,UPI,Pending,Unpaid
+ORD013,CUST013,Saurabh Tiwari,saurabh.t@yahoo.in,7012345678,Indore,07-07-2022,04-04-2024,14:00,SKU-113,Mouse Pad,5,199,995,Net Banking,Delivered,Paid
+ORD014,CUST014,Kavya Krishnan,kavya.k@gmail.com,6123456789,Chandigarh,20-10-2023,03-04-2024,10:45,SKU-114,Notebook Set,2,349,698,Cash,Shipped,Paid
+ORD015,CUST015,Manish Agrawal,manish.a@business.in,9234567890,Surat,11-01-2022,02-04-2024,16:00,SKU-115,Phone Case,3,149,447,UPI,Delivered,Paid
+ORD016,CUST016,Priyanka Sharma,priyanka.s@gmail.com,,Mumbai,05-06-2022,01-04-2024,08:00,SKU-116,Headphones,1,1999,1999,Card,Pending,Unpaid
+ORD017,CUST017,Siddharth Roy,siddharth.r@gmail.com,+919876543210,Delhi,13-03-2022,31-03-2024,11:00,SKU-117,Earbuds,1,2499,2499,UPI,Confirmed,Paid
+ORD018,CUST018,Tanvi Mehta,tanvi.m@yahoo.com,1234567890,Pune,28-07-2023,30-03-2024,14:15,SKU-118,Fitness Band,1,3999,3999,Card,Shipped,Paid
+ORD019,CUST019,Varun Bose,varun.bose@company.in,98765,Bangalore,15-09-2021,29-03-2024,09:45,SKU-119,Power Bank,2,999,1998,Cash,Delivered,Paid
+ORD020,CUST020,Shruti Kapoor,shruti.k@gmail.com,98765432101,Chennai,02-04-2022,28-03-2024,16:30,SKU-120,Kindle Reader,1,7999,7999,Net Banking,Processing,Pending
+ORD021,CUST021,Aditya Kumar,aditya.kumar@gmail.com,9345678901,Hyderabad,15-08-2023,31-02-2024,13:00,SKU-121,Tablet Stand,2,499,998,UPI,Pending,Unpaid
+ORD022,CUST022,Riya Sharma,riya.sharma@yahoo.in,8456789012,Kolkata,20-11-2022,29-02-2023,10:30,SKU-122,LED Strip,3,399,1197,Cash,Confirmed,Paid
+ORD023,CUST023,Kartik Verma,kartik.v@gmail.com,7567890123,Ahmedabad,08-04-2021,,15:45,SKU-123,Face Wash,5,199,995,Card,Delivered,Paid
+ORD024,CUST024,Meera Iyer,meera.iyer@company.in,6678901234,Jaipur,15.03.2023,25-03-2024,11:00,SKU-124,Tote Bag,1,799,799,UPI,Shipped,Paid
+ORD025,CUST025,Naveen Pillai,naveen.p@gmail.com,9789012345,Kochi,10-02-2024,25-12-2026,14:00,SKU-125,Sunglasses,2,599,1198,Cash,Pending,Unpaid
+ORD026,CUST026,Divya Tiwari,divya.tiwari.gmail.com,8890123456,Lucknow,03-06-2022,24-03-2024,09:00,SKU-126,Air Fryer,1,5999,5999,Card,Delivered,Paid
+ORD027,CUST027,Rohit Agarwal,rohit@,9901234567,Nagpur,17-09-2023,23-03-2024,12:30,SKU-127,Wall Clock,1,699,699,UPI,Confirmed,Paid
+ORD028,CUST028,Swati Gupta,swati..gupta@gmail.com,7012345679,Indore,24-01-2022,22-03-2024,15:00,SKU-128,Mixer Grinder,1,2999,2999,Net Banking,Processing,Pending
+ORD029,CUST029,Abhishek Nair,,8123456790,Chandigarh,05-12-2021,21-03-2024,10:15,SKU-129,Rice Cooker,2,1599,3198,Cash,Shipped,Paid
+ORD030,CUST030,Pallavi Singh,NULL,9234567891,Surat,19-03-2023,20-03-2024,13:45,SKU-130,Electric Kettle,1,999,999,UPI,Delivered,Paid
+ORD031,CUST031,Gaurav Jain,gaurav.jain@gmail.com,8345678902,Mumbai,26-07-2022,19-03-2024,08:30,SKU-131,Perfume Set,2,1299,free,Card,Confirmed,Paid
+ORD032,CUST032,Ananya Das,ananya.das@yahoo.com,7456789013,Delhi,10-10-2023,18-03-2024,11:45,SKU-132,Cushion Cover,4,299,N/A,Cash,Delivered,Paid
+ORD033,CUST033,Vivek Sharma,vivek.sharma@company.in,6567890124,Bangalore,04-02-2022,17-03-2024,14:30,SKU-133,Water Purifier,1,8999,-8999,UPI,Processing,Pending
+ORD034,CUST034,Megha Patel,megha.patel@gmail.com,9678901235,Ahmedabad,18-05-2023,16-03-2024,09:00,SKU-134,Smart Bulb,3,299,0,Net Banking,Pending,Unpaid
+ORD035,CUST035,Tarun Malhotra,tarun.m@gmail.com,8789012346,Jaipur,29-08-2021,15-03-2024,12:15,SKU-135,Server Rack,1,250000,25000000,Card,Shipped,Paid
+ORD036,CUST036,Ritu Joshi,ritu.joshi@yahoo.in,7890123457,Pune,12-11-2022,14-03-2024,15:30,SKU-136,Toy Car,-3,199,597,Cash,Delivered,Paid
+ORD037,CUST037,Puneet Kumar,puneet.k@gmail.com,6901234568,Chennai,25-01-2023,13-03-2024,10:00,SKU-137,Pillow,2.5,599,1497,UPI,Confirmed,Paid
+ORD038,CUST038,Sonia Reddy,sonia.reddy@company.in,9012345679,Hyderabad,08-04-2022,12-03-2024,13:15,SKU-138,Wall Art,0,1299,0,Card,Delivered,Paid
+ORD039,CUST039,Mohan Sharma,mohan.sharma@gmail.com,8123456780,Kolkata,20-06-2021,11-03-2024,16:00,SKU-139,Cricket Bat,1,1899,1899,bitcoin,Pending,Unpaid
+ORD040,CUST040,Geeta Mehta,geeta.mehta@yahoo.com,7234567891,Kochi,03-09-2023,10-03-2024,09:30,SKU-140,Baking Tray,2,399,798,barter exchange,Confirmed,Paid
+ORD041,CUST041,Dinesh Iyer,dinesh.iyer@gmail.com,6345678902,Lucknow,17-12-2022,09-03-2024,12:45,SKU-141,Plant Pot,3,249,747,,Processing,Pending
+ORD042,CUST042,Bhavna Gupta,bhavna.gupta@gmail.com,9456789013,Nagpur,31-03-2022,08-03-2024,15:15,SKU-142,Protein Bar,10,99,990,UPI,in transit,Paid
+ORD043,CUST043,Nikhil Agrawal,nikhil.a@company.in,8567890124,Indore,14-07-2023,07-03-2024,10:30,SKU-143,Smart Lock,1,3499,3499,Card,dispatched,Paid
+ORD044,CUST044,Lakshmi Tiwari,lakshmi.t@yahoo.in,7678901235,Chandigarh,28-10-2021,06-03-2024,13:00,SKU-144,Scarf,2,399,798,Cash,Delivered,bounced
+ORD045,CUST045,Ashish Nair,ashish.nair@gmail.com,6789012346,Surat,11-01-2023,05-03-2024,16:15,SKU-145,Sun Cream,4,299,1196,UPI,Confirmed,declined
+ORD046,CUST046,Shikha Singh,shikha.singh@gmail.com,9890123457,Mumbai,24-04-2022,04-03-2024,09:00,SKU-146,Marker Set,3,149,447,Net Banking,Shipped,
+ORD047,,Ravi Sharma,ravi.sharma@gmail.com,8901234568,Delhi,07-08-2023,03-03-2024,12:00,SKU-147,Skipping Rope,1,299,299,Cash,Delivered,Paid
+,CUST048,Alka Reddy,alka.reddy@yahoo.com,7912345679,Bangalore,21-11-2022,02-03-2024,15:30,SKU-148,Lip Balm,5,99,495,UPI,Pending,Unpaid
+ORD049,CUST049,Farhan Desai,farhan.desai@company.in,6923456790,Ahmedabad,04-03-2022,01-03-2024,10:45,X,Earphones Pro,2,1799,3598,Card,Confirmed,Paid
+ORD050,CUST050,Preeti Jain,preeti.jain@gmail.com,9034567891,Jaipur,18-06-2023,29-02-2024,14:00,,Smart Ring,1,5999,5999,UPI,Shipped,Paid
+ORD051,CUST051,ronak mehta,ronak.mehta@gmail.com,8145678902,Pune,01-09-2021,28-02-2024,09:15,SKU-151,Shampoo,3,299,₹897,Cash,Delivered,Paid
+ORD052,CUST052,chandni gupta,chandni.g@yahoo.in,7256789013,CHENNAI,15-12-2022,27-02-2024,11:30,SKU-152,Conditioner,2,₹349,698,Card,Delivered,Paid
+ORD053,CUST053,Harshit Patel,harshit.p@company.in,6367890124,Hyderabad,28-03-2021,26-02-2024,14:15,SKU-153,Face Serum,1,1299,1299,UPI,Confirmed,Paid
+ORD054,CUST054,Sunita Sharma,sunita.s@gmail.com,9478901235,Kolkata,11-07-2023,25-02-2024,16:00,SKU-154,Nail Polish,4,199,796,Net Banking,Shipped,Paid
+ORD055,CUST055,Kapil Iyer,kapil.iyer@yahoo.com,8589012346,Kochi,24-10-2022,24-02-2024,08:30,SKU-155,Body Lotion,2,449,898,Cash,Delivered,Paid
+ORD056,CUST056,Payal Agarwal,payal.a@gmail.com,7690123457,lucknow,07-01-2022,23-02-2024,10:45,SKU-156,Lip Gloss,3,199,597,UPI,Processing,Pending
+ORD057,CUST057,Vinay Kumar,vinay.kumar@company.in,6701234568,Nagpur,20-04-2023,22-02-2024,13:30,SKU-157,Eye Shadow,1,599,599,Card,Delivered,Paid
+ORD058,CUST058,Shalini Malhotra,shalini.m@gmail.com,9812345679,Indore,03-08-2021,21-02-2024,15:45,SKU-158,Foundation,2,799,1598,Cash,Confirmed,Paid
+ORD059,CUST059,Dilip Joshi,dilip.joshi@yahoo.in,8923456780,Chandigarh,17-11-2022,20-02-2024,09:00,SKU-159,Mascara,3,349,1047,UPI,Shipped,Paid
+ORD060,CUST060,Mamta Singh,mamta.singh@gmail.com,7934567891,Surat,30-01-2023,19-02-2024,11:15,SKU-160,Perfume,1,2499,2499,Net Banking,Delivered,Paid
+ORD061,CUST061,Sachin Tiwari,sachin.t@company.in,6945678902,Mumbai,12-05-2022,18-02-2024,14:00,SKU-161,Towel,5,299,"1,495",Cash,Delivered,Paid
+ORD062,CUST062,Karishma Nair,karishma.n@gmail.com,9056789013,Delhi,26-08-2021,17-02-2024,16:15,SKU-162,Bed Sheet,2,899,1798,UPI,Confirmed,Paid
+ORD063,CUST063,Rajesh Reddy,rajesh.reddy@yahoo.com,8167890124,Bangalore,08-12-2022,16-02-2024,09:30,SKU-163,Pillow Cover,3,249,747,Card,Processing,Pending
+ORD064,CUST064,Anita Desai,anita.desai@company.in,7278901235,Ahmedabad,22-03-2023,15-02-2024,12:45,SKU-164,Curtain,1,1499,1499,Cash,Shipped,Paid
+ORD065,CUST065,Pramod Jain,pramod.jain@gmail.com,6389012346,Jaipur,05-07-2021,14-02-2024,15:00,SKU-165,Door Mat,2,399,798,UPI,Delivered,Paid
+ORD066,CUST066,Supriya Gupta,supriya.g@yahoo.in,9490123457,Pune,18-10-2022,13-02-2024,10:15,SKU-166,Storage Box,4,549,2196,Net Banking,Confirmed,Paid
+ORD067,CUST067,Manoj Patel,manoj.patel@gmail.com,8501234568,Chennai,01-01-2023,12-02-2024,13:30,SKU-167,Laundry Bag,1,349,349,Cash,Delivered,Paid
+ORD068,CUST068,Leena Verma,leena.verma@company.in,7612345679,Hyderabad,15-04-2022,11-02-2024,16:45,SKU-168,Hangers Pack,3,199,597,UPI,Shipped,Paid
+ORD069,CUST069,Gaurang Mehta,gaurang.m@gmail.com,6723456780,Kolkata,28-07-2021,10-02-2024,09:00,SKU-169,Soap Dispenser,2,299,598,Card,Delivered,Paid
+ORD070,CUST070,Aarti Iyer,aarti.iyer@yahoo.com,9834567891,Kochi,11-11-2022,09-02-2024,11:15,SKU-170,Dish Rack,1,899,899,Cash,Confirmed,Paid
+ORD071,CUST071,Neeraj Agrawal,neeraj.a@gmail.com,8945678902,Lucknow,24-01-2023,08-02-2024,25:00,SKU-171,Spice Rack,3,199,597,UPI,Processing,Pending
+ORD072,CUST072,Swarna Kumar,swarna.k@company.in,7956789013,Nagpur,07-05-2022,07-02-2024,09:75,SKU-172,Cutting Board,2,349,698,Card,Delivered,Paid
+ORD073,CUST073,Bindiya Singh,bindiya.s@yahoo.in,6967890124,Indore,20-08-2021,06-02-2024,morning,SKU-173,Vase,1,599,599,Cash,Shipped,Paid
+ORD074,CUST074,Hemant Tiwari,hemant.t@gmail.com,9078901235,Chandigarh,03-12-2022,05-02-2024,12:00,SKU-174,Photo Frame,2,299,598,UPI,Confirmed,Paid
+ORD075,CUST075,Rashmi Nair,rashmi.nair@gmail.com,8189012346,Surat,17-03-2023,04-02-2024,15:15,SKU-175,Candle,10,149,1490,Net Banking,Delivered,Paid
+ORD076,CUST076,Pawan Joshi,pawan.joshi@yahoo.com,7290123457,Mumbai,30-06-2021,03-02-2024,10:30,SKU-176,Air Freshener,5,199,995,Cash,Shipped,Paid
+ORD077,CUST077,Isha Patel,isha.patel@company.in,6301234568,Delhi,14-09-2022,02-02-2024,13:45,SKU-177,Sanitizer,20,49,980,Card,Delivered,Paid
+ORD078,CUST078,Vikash Mehta,vikash.m@gmail.com,9412345679,Bangalore,27-12-2023,01-02-2024,16:00,SKU-178,Plant Seeds,3,99,297,UPI,Processing,Pending
+ORD079,CUST079,Champa Reddy,champa.r@yahoo.in,8523456780,Ahmedabad,10-04-2022,31-01-2024,09:15,SKU-179,Garden Gloves,2,249,498,Cash,Confirmed,Paid
+ORD080,CUST080,Suresh Iyer,suresh.iyer@gmail.com,7634567891,Jaipur,24-07-2021,30-01-2024,12:30,SKU-180,Watering Can,1,399,399,Net Banking,Delivered,Paid
+ORD001,CUST001,Arjun Sharma,arjun.sharma@gmail.com,9876543210,Mumbai,15-03-2022,10-04-2024,14:30,SKU-101,Wireless Earphones,2,1299,2598,UPI,Delivered,Paid
+ORD002,CUST002,Priya Mehta,priya.mehta@yahoo.com,8765432109,Delhi,22-07-2021,12-04-2024,09:15,SKU-102,Smart Watch,1,4999,4999,Card,Shipped,Paid
+ORD003,CUST003,Rahul Gupta,rahul.g@company.in,7654321098,Bangalore,01-01-2020,08-04-2024,11:45,SKU-103,Running Shoes,1,2499,2499,Cash,Delivered,Paid
+ORD008,CUST008,Anjali Reddy,anjali.reddy@gmail.com,9567890123,Hyderabad,03-03-2022,13-04-2024,15:10,SKU-108,Coffee Maker,1,3499,3499,UPI,Delivered,Paid
+ORD013,CUST013,Saurabh Tiwari,saurabh.t@yahoo.in,7012345678,Indore,07-07-2022,04-04-2024,14:00,SKU-113,Mouse Pad,5,199,995,Net Banking,Delivered,Paid
+ORD086,CUST086,namrata sharma,namrata.s@gmail.com,9745678902,pune,03-02-2022,29-01-2024,11:00,SKU-186,Notebook,5,79,₹395,Cash,Delivered,Paid
+ORD087,CUST087,RAMESH KUMAR,ramesh.k@company.in,8856789013,CHENNAI,17-05-2023,28-01-2024,14:15,SKU-187,Pen Set,10,49,₹490,UPI,Confirmed,Paid
+ORD088,CUST088,girish malhotra,girish.m@yahoo.com,79 6789 0124,hyderabad,30-08-2021,27-01-2024,16:30,SKU-188,Stapler,1,299,299,Card,Shipped,Paid
+ORD089,CUST089,Hema Joshi,hema.joshi@gmail.com,6978901235,KOLKATA,13-12-2022,26-01-2024,09:45,SKU-189,Scissors,2,149,298,Cash,Delivered,Paid
+ORD090,CUST090,Jatin Verma,jatin.verma@company.in,9089012346,Kochi,26-03-2023,25-01-2024,12:00,SKU-190,Tape,6,29,"1,74",UPI,Processing,Pending
+ORD091,CUST091,Komal Reddy,komal.reddy@gmail.com,8190123457,Lucknow,08-07-2021,24-01-2024,15:15,SKU-191,Binder,3,199,"5,97",Net Banking,Delivered,Paid
+ORD092,CUST092,Lalit Agrawal,lalit.a@yahoo.in,7201234568,Nagpur,22-10-2022,23-01-2024,10:30,SKU-192,File Folder,4,99,396,Card,Confirmed,Paid
+ORD093,CUST093,Mona Kumar,mona.kumar@gmail.com,6312345679,Indore,05-01-2023,22-01-2024,13:45,SKU-193,Scientific Calculator,1,499,499,Cash,Shipped,Paid
+ORD094,CUST094,Nitin Singh,nitin.singh@company.in,9423456780,Chandigarh,19-04-2022,21-01-2024,16:00,SKU-194,Desk Organiser,2,349,698,UPI,Delivered,Paid
+ORD095,CUST095,Omi Mehta,omi.mehta@gmail.com,8534567891,Surat,01-08-2021,20-01-2024,09:15,SKU-195,Pen Drive,3,"5,99","1,797",Card,Pending,Unpaid
+ORD096,CUST096,Prabha Iyer,prabha.iyer@yahoo.com,7645678902,Mumbai,15-11-2022,19-01-2024,12:30,SKU-196,Extension Cord,2,499,998,Net Banking,Delivered,Paid
+ORD097,CUST097,Qureshi Ahmed,qureshi.a@company.in,6756789013,Delhi,28-02-2023,18-01-2024,15:45,SKU-197,LED Bulb,6,99,594,Cash,Confirmed,Paid
+ORD098,CUST098,Radha Sharma,radha.sharma@gmail.com,9867890124,Bangalore,11-06-2021,17-01-2024,10:00,SKU-198,Night Lamp,1,799,799,UPI,Shipped,Paid
+ORD099,CUST099,Suman Patel,suman.patel@yahoo.in,8978901235,Ahmedabad,25-09-2022,16-01-2024,13:15,SKU-199,Table Fan,1,2499,2499,Card,Delivered,Paid
+ORD100,CUST100,Tarun Reddy,tarun.reddy@gmail.com,7989012346,Jaipur,08-01-2023,15-01-2024,16:30,SKU-200,Ceiling Fan,1,3999,3999,Cash,Processing,Pending
+ORD101,CUST101,Uma Verma,uma.verma@company.in,6990123457,Pune,22-04-2022,14-01-2024,09:45,SKU-201,Iron Box,1,1799,1799,UPI,Delivered,Paid
+ORD102,CUST102,Vaibhav Joshi,vaibhav.j@gmail.com,9001234568,Chennai,05-08-2021,13-01-2024,12:00,SKU-202,Toaster,2,1299,2598,Card,Confirmed,Paid
+ORD103,CUST103,Wini Malhotra,wini.m@yahoo.com,8112345679,Hyderabad,18-11-2022,12-01-2024,15:15,SKU-203,Blender,1,3999,3999,Net Banking,Shipped,Paid
+ORD104,CUST104,Xena Gupta,xena.gupta@company.in,7223456780,Kolkata,01-03-2023,11-01-2024,10:30,SKU-204,Hand Mixer,1,2499,2499,Cash,Delivered,Paid
+ORD105,CUST105,Yash Sharma,yash.sharma@gmail.com,6334567891,Kochi,15-06-2022,10-01-2024,13:45,SKU-205,Food Processor,1,4999,4999,UPI,Confirmed,Paid
+ORD106,CUST106,Zara Khan,zara.khan@yahoo.in,9445678902,Lucknow,28-09-2021,09-01-2024,16:00,SKU-206,Induction Cooktop,1,2999,2999,Card,Processing,Pending
+ORD107,CUST107,Arpit Agrawal,arpit.a@gmail.com,5876543210,Nagpur,11-01-2023,08-01-2024,09:15,SKU-207,Pressure Cooker,1,1599,1599,Cash,Delivered,Paid
+ORD108,CUST108,Bharat Mehta,bharat.m@company.in,8556789013,Indore,24-04-2022,07-01-2024,12:30,SKU-208,Toothpicks,200000,2,400000,UPI,Delivered,Paid
+ORD109,CUST109,Charu Reddy,charu.reddy@yahoo.com,7667890124,Chandigarh,07-08-2021,06-01-2024,15:45,SKU-209,Rubber Bands,50,5,250,Net Banking,Confirmed,Paid
+ORD110,CUST110,Deepak Singh,deepak.singh@gmail.com,6778901235,Surat,20-11-2022,05-01-2024,10:00,SKU-210,Paper Clips,100,3,300,Card,Shipped,Paid
+ORD111,CUST111,Esha Patel,esha.patel@gmail.com,9889012346,Mumbai,15-03-2027,04-01-2024,13:15,SKU-211,Laptop Bag,1,1299,1299,Cash,Delivered,Paid
+ORD112,CUST112,Faisal Sharma,faisal.s@company.in,8990123457,Delhi,28-06-2022,03-01-2024,16:30,SKU-212,Industrial AC,1,50000,50000000,UPI,Confirmed,Paid
+ORD113,CUST113,Gita Verma,gita.verma@yahoo.in,7901234568,Bangalore,11-10-2023,02-01-2024,09:45,SKU-213,Smart Plug,2,699,1398,Card,Delivered,
+ORD114,CUST114,Hari Agrawal,hari.a@mycompany.co.in,6912345679,Ahmedabad,25-01-2022,01-01-2024,12:00,SKU-214,Extension Board,3,399,1197,Cash,Shipped,Paid
+ORD115,CUST115,Indu Joshi,indu.joshi@gmail.com,9023456780,Jaipur,08-05-2021,31-12-2023,15:15,SKU-215,HDMI Cable,2,299,598,Net Banking,Delivered,Paid
+ORD116,CUST116,Jagdish Iyer,jagdish.iyer@gmail.com,8134567891,Pune,22-08-2022,30-12-2023,10:30,SKU-216,Monitor Stand,1,1299,1299,UPI,Confirmed,Paid
+ORD117,CUST117,Kaveri Singh,kaveri.singh@yahoo.com,7245678902,Chennai,05-12-2023,29-12-2023,13:45,SKU-217,Keyboard,1,1799,1799,Card,Shipped,Paid
+ORD118,CUST118,Lokesh Kumar,lokesh.k@company.in,6356789013,Hyderabad,19-03-2022,28-12-2023,16:00,SKU-218,Mouse,1,799,799,Cash,Delivered,Paid
+ORD119,CUST119,Meenal Reddy,meenal.r@gmail.com,9467890124,Kolkata,02-07-2021,27-12-2023,09:15,SKU-219,Webcam,1,2999,2999,UPI,Confirmed,Paid
+ORD120,CUST120,Nirupama Verma,nirupama.v@yahoo.in,8578901235,Kochi,16-10-2022,26-12-2023,12:30,SKU-220,Microphone,1,3499,3499,Net Banking,Delivered,Paid

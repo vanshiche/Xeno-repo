@@ -8,6 +8,8 @@ const STATE = {
   file:         null,
   parsed:       null,   // { headers, rows, rowCount }
   validation:   null,   // { issues, cleanRows, errorRows, colProfiles }
+  fixedRows:    null,   // auto-repaired copy of ALL rows
+  fixSummary:   null,   // { totalFixes, byColumn, fixLog }
   filteredIssues: [],
   currentFilter: 'all',
   currentPage:   1,
@@ -109,6 +111,7 @@ function showDatasetBadge(dsType, headers) {
 
 $('clear-btn').addEventListener('click', () => {
   STATE.file = null; STATE.parsed = null; STATE.validation = null;
+  STATE.fixedRows = null; STATE.fixSummary = null;
   fileInput.value = '';
   $('file-info-card').style.display = 'none';
   $('dataset-type-badge').style.display = 'none';
@@ -164,6 +167,17 @@ $('validate-btn').addEventListener('click', async () => {
 
     const result = engine.validate(parsed.rows, parsed.headers);
     STATE.validation = result;
+
+    // ── Run Auto-Fix on ALL rows immediately after validation ──
+    label.textContent = 'Applying auto-fixes…';
+    await new Promise(r => setTimeout(r, 40));
+    const { fixedRows, fixSummary } = autoFix(parsed.rows, parsed.headers, {
+      country:    $('country-select').value,
+      dateFormat: $('date-format-select').value,
+    });
+    STATE.fixedRows  = fixedRows;
+    STATE.fixSummary = fixSummary;
+
     bar.style.width = '100%';
     label.textContent = 'Complete!';
 
@@ -175,7 +189,10 @@ $('validate-btn').addEventListener('click', async () => {
     showDatasetBadge(result.datasetType, parsed.headers);
 
     renderValidationResults(parsed, result);
-    toast('Validation Complete', `${parsed.rowCount.toLocaleString()} rows · ${result.issues.length} issues found`, result.issues.length === 0 ? 'success' : 'warning');
+    const fixMsg = fixSummary.totalFixes > 0
+      ? ` · ${fixSummary.totalFixes.toLocaleString()} values auto-fixed`
+      : '';
+    toast('Validation Complete', `${parsed.rowCount.toLocaleString()} rows · ${result.issues.length} issues found${fixMsg}`, result.issues.length === 0 ? 'success' : 'warning');
 
     // Scroll to results
     setTimeout(() => $('validation-section').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
@@ -243,6 +260,31 @@ function renderValidationResults(parsed, result) {
     `${cleanRows.length.toLocaleString()} clean rows · ${parsed.headers.length} columns`;
   $('export-error-meta').textContent =
     `${errorRows.length.toLocaleString()} rows with errors`;
+
+  // ── Auto-Fix export meta ──
+  const fs = STATE.fixSummary;
+  if (fs && $('export-autofix-meta')) {
+    const colsFixed = Object.keys(fs.byColumn).length;
+    $('export-autofix-meta').textContent = fs.totalFixes > 0
+      ? `${rows.length.toLocaleString()} rows · ${fs.totalFixes.toLocaleString()} values repaired across ${colsFixed} column${colsFixed !== 1 ? 's' : ''}`
+      : `${rows.length.toLocaleString()} rows · no repairs needed — data already clean`;
+
+    // Render the per-column fix breakdown chips
+    const breakdown = $('autofix-breakdown');
+    if (breakdown) {
+      breakdown.innerHTML = '';
+      if (fs.totalFixes > 0) {
+        Object.entries(fs.byColumn)
+          .sort((a, b) => b[1] - a[1])
+          .forEach(([col, count]) => {
+            const chip = document.createElement('span');
+            chip.className = 'autofix-chip';
+            chip.textContent = `${col}: ${count.toLocaleString()}`;
+            breakdown.appendChild(chip);
+          });
+      }
+    }
+  }
 
   updateChunkMeta();
 }
@@ -410,6 +452,36 @@ $('download-errors-btn').addEventListener('click', () => {
   const baseName = (STATE.file?.name || 'data').replace(/\.csv$/i, '');
   CSVProcessor.download(csv, `${baseName}_errors.csv`);
   toast('Download Started', `${errorRows.length.toLocaleString()} error rows exported`, 'success');
+});
+
+/* ── Auto-Fix Download ───────────────────────────────────────────────────────── */
+$('download-autofix-btn').addEventListener('click', () => {
+  if (!STATE.fixedRows || !STATE.parsed) return;
+  const { headers } = STATE.parsed;
+  const baseName    = (STATE.file?.name || 'data').replace(/\.csv$/i, '');
+
+  // 1. Download the repaired full dataset
+  const csv = CSVProcessor.toCSV(headers, STATE.fixedRows);
+  CSVProcessor.download(csv, `${baseName}_autoFixed.csv`);
+
+  const fs = STATE.fixSummary;
+  toast('Auto-Fix Downloaded', `${STATE.fixedRows.length.toLocaleString()} rows · ${fs.totalFixes.toLocaleString()} values repaired`, 'success');
+});
+
+$('download-fixlog-btn').addEventListener('click', () => {
+  if (!STATE.fixSummary || !STATE.fixSummary.fixLog.length) {
+    toast('No Fix Log', 'No repairs were made — nothing to log.', 'info');
+    return;
+  }
+  const baseName = (STATE.file?.name || 'data').replace(/\.csv$/i, '');
+  const logHeaders = ['row', 'column', 'action', 'original', 'fixed'];
+  const logRows    = STATE.fixSummary.fixLog.map(e => ({
+    row: e.row, column: e.column, action: e.action,
+    original: e.original, fixed: e.fixed,
+  }));
+  const csv = CSVProcessor.toCSV(logHeaders, logRows);
+  CSVProcessor.download(csv, `${baseName}_fixLog.csv`);
+  toast('Fix Log Downloaded', `${logRows.length.toLocaleString()} repair records exported`, 'info');
 });
 
 function updateChunkMeta() {

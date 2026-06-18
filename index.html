@@ -473,6 +473,44 @@
           </button>
         </div>
 
+        <!-- Auto-Fix Dataset -->
+        <div class="export-card export-card-full" id="export-autofix-card">
+          <div class="export-card-icon export-icon-green">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M20 4L24 8L10 22H6V18L20 4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M17 7L25 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M4 28H28" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="26" cy="8" r="3" fill="currentColor" opacity="0.4"/>
+              <circle cx="26" cy="8" r="1.5" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="export-card-body">
+            <div class="autofix-title-row">
+              <h3 class="export-card-title">Auto-Fixed Dataset</h3>
+              <span class="autofix-badge">⚡ Smart Repair</span>
+            </div>
+            <p class="export-card-desc">All rows with values automatically repaired: phone numbers normalised, dates converted to ISO 8601, city names title-cased, currency symbols stripped from amounts.</p>
+            <div class="export-meta" id="export-autofix-meta">Run validation to generate fixes.</div>
+            <div class="autofix-breakdown" id="autofix-breakdown"></div>
+          </div>
+          <div class="chunk-actions">
+            <button class="btn btn-green" id="download-autofix-btn">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 3V11M8 11L5 8M8 11L11 8" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M3 13H13" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              Download Auto-Fixed
+            </button>
+            <button class="btn btn-secondary" id="download-fixlog-btn">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M5 6H11M5 9H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Download Fix Log
+            </button>
+          </div>
+        </div>
+
         <!-- Chunked Files -->
         <div class="export-card export-card-full" id="export-chunk-card">
           <div class="export-card-icon export-icon-purple">

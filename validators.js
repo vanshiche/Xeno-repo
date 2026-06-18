@@ -511,11 +511,159 @@ class ValidationEngine {
   }
 }
 
+// ── Auto-Fix Engine ───────────────────────────────────────────────────────────
+
+/** Strip country dial-code prefix + all non-digit separators from a phone value. */
+function _fixPhone(val, country) {
+  if (!val) return val;
+  const s = String(val).trim();
+  // Remove spaces, dashes, dots, parens, then strip leading +
+  const stripped = s.replace(/[\s\-\(\)\.]/g, '').replace(/^\+/, '');
+
+  // Country dial code map
+  const dialCodes = {
+    IN: '91', SG: '65', US: '1', GB: '44',
+    AE: '971', AU: '61', DE: '49', FR: '33', JP: '81',
+  };
+  const code = dialCodes[country];
+  if (!code) return stripped; // MULTI or unknown — just return stripped
+
+  // If starts with dial code AND stripping it gives a plausible local number, strip it
+  if (stripped.startsWith(code)) {
+    const withoutCode = stripped.slice(code.length);
+    const rule = PHONE_RULES[country];
+    if (rule) {
+      const minD = Math.min(...rule.digits);
+      const maxD = Math.max(...rule.digits);
+      if (withoutCode.length >= minD && withoutCode.length <= maxD) {
+        return withoutCode;
+      }
+    }
+  }
+  return stripped;
+}
+
+/** Convert any recognised date format to ISO 8601 YYYY-MM-DD. */
+function _fixDate(val, dateFormat) {
+  if (!val) return val;
+  const s = String(val).trim();
+  const fmt = dateFormat === 'AUTO' ? autoDetectDateFormat(s) : dateFormat;
+  if (!fmt) return val;           // unrecognised format — leave as-is
+  if (fmt === 'YYYY-MM-DD') return s; // already ISO — no change
+  const rule = DATE_FORMATS[fmt];
+  const m = s.match(rule.regex);
+  if (!m) return val;
+  const { y, mo, d } = rule.parse(m);
+  if (!isValidCalendarDate(y, mo, d)) return val;
+  return `${String(y).padStart(4,'0')}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
+
+/** Title-case a string: "DELHI" → "Delhi", "new delhi" → "New Delhi" */
+function _toTitleCase(val) {
+  if (!val) return val;
+  return String(val).toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+}
+
+/** Strip currency symbols (₹ $ € £ ¥) and thousands commas from numeric strings. */
+function _fixAmount(val) {
+  if (!val) return val;
+  const s = String(val).trim().replace(/[₹$€£¥]/g, '').replace(/,/g, '').trim();
+  const n = parseFloat(s);
+  return isNaN(n) ? val : String(n);
+}
+
+/**
+ * Auto-Fix Engine
+ * Iterates ALL rows (including error rows) and repairs values in-place where possible.
+ *
+ * Fixes applied per column type:
+ *   phone        → strip country code / separators → clean local digits
+ *   date         → normalise to ISO YYYY-MM-DD
+ *   city / name  → title-case
+ *   amount       → strip currency symbols & commas
+ *   all types    → trim leading/trailing whitespace
+ *
+ * @param {Object[]} rows       - Array of row-objects from the parser
+ * @param {string[]} headers    - Ordered column names
+ * @param {Object}   options    - { country: string, dateFormat: string }
+ * @returns {{ fixedRows: Object[], fixSummary: { totalFixes: number, byColumn: Object, fixLog: Object[] } }}
+ */
+function autoFix(rows, headers, options = {}) {
+  const country    = options.country    || 'IN';
+  const dateFormat = options.dateFormat || 'AUTO';
+
+  // Detect column types once
+  const colTypes = {};
+  headers.forEach(h => { colTypes[h] = detectColumnType(h); });
+
+  const byColumn  = {};   // colName → number of cells repaired
+  let   totalFixes = 0;
+  const fixLog    = [];   // { row, column, original, fixed, action }
+
+  const fixedRows = rows.map((row, rowIdx) => {
+    const newRow = {};
+    headers.forEach(h => {
+      const type     = colTypes[h];
+      const original = row[h];
+
+      // Null / truly empty cells — nothing to fix
+      if (original === null || original === undefined || String(original).trim() === '') {
+        newRow[h] = original;
+        return;
+      }
+
+      const trimmed = String(original).trim();
+      let fixed = trimmed;
+
+      switch (type) {
+        case 'phone':
+          fixed = _fixPhone(trimmed, country);
+          break;
+        case 'date':
+          fixed = _fixDate(trimmed, dateFormat);
+          break;
+        case 'city':
+        case 'name':
+          fixed = _toTitleCase(trimmed);
+          break;
+        case 'amount':
+          fixed = _fixAmount(trimmed);
+          break;
+        default:
+          // At minimum, whitespace was trimmed above
+          break;
+      }
+
+      // Track the change if value actually changed
+      if (fixed !== String(original)) {
+        byColumn[h] = (byColumn[h] || 0) + 1;
+        totalFixes++;
+        fixLog.push({
+          row:      rowIdx + 2,   // 1-indexed with header row offset
+          column:   h,
+          original: String(original),
+          fixed,
+          action:   type,
+        });
+      }
+      newRow[h] = fixed;
+    });
+    return newRow;
+  });
+
+  return {
+    fixedRows,
+    fixSummary: { totalFixes, byColumn, fixLog },
+  };
+}
+
 // Exports
 window.ValidationEngine  = ValidationEngine;
 window.detectColumnType  = detectColumnType;
 window.detectDatasetType = detectDatasetType;
+window.autoFix           = autoFix;
 window.PHONE_RULES       = PHONE_RULES;
 window.VALID_PAYMENT_MODES   = VALID_PAYMENT_MODES;
 window.VALID_ORDER_STATUSES  = VALID_ORDER_STATUSES;
 window.VALID_PAYMENT_STATUSES = VALID_PAYMENT_STATUSES;
+
