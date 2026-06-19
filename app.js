@@ -123,6 +123,8 @@ $('clear-btn').addEventListener('click', () => {
   fileInput.value = '';
   $('file-info-card').style.display = 'none';
   $('dataset-type-badge').style.display = 'none';
+  const dotNav = $('dot-nav');
+  if (dotNav) dotNav.style.display = 'none';
   ['validation-section', 'preview-section', 'profile-section', 'export-section', 'analytics-section'].forEach(id => {
     if ($(id)) $(id).style.display = 'none';
   });
@@ -224,6 +226,10 @@ function renderValidationResults(parsed, result) {
   $('preview-section').style.display    = 'block';
   $('profile-section').style.display    = 'block';
   $('export-section').style.display     = 'block';
+
+  // Show dot navigation sidebar
+  const dotNav = $('dot-nav');
+  if (dotNav) dotNav.style.display = 'flex';
 
   // Reset analytics filters
   STATE.analyticsFilterType = null;
@@ -1124,6 +1130,98 @@ if (downloadSqlBtn) {
     toast('SQL Downloaded', 'Full migration script downloaded successfully.', 'success');
   });
 }
+
+/* ── Dynamic Scroll Spy and Nav Highlights ── */
+function setupScrollSpy() {
+  const sections = [
+    $('upload-section'),
+    $('validation-section'),
+    $('analytics-section'),
+    $('preview-section'),
+    $('profile-section'),
+    $('export-section')
+  ].filter(el => el !== null);
+
+  const navLinksMap = {
+    'upload-section':     $('nav-upload'),
+    'validation-section': $('nav-validate'),
+    'analytics-section':  $('nav-analytics'),
+    'preview-section':    $('nav-preview'),
+    'profile-section':    $('nav-preview'), // Share preview nav highlight for profiles
+    'export-section':     $('nav-export')
+  };
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '-25% 0px -45% 0px', // Trigger when section occupies the middle of viewport
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        const activeLink = navLinksMap[id];
+        
+        // Remove active class from all links
+        Object.values(navLinksMap).forEach(link => {
+          if (link) link.classList.remove('active');
+        });
+        
+        // Add active to current
+        if (activeLink) {
+          activeLink.classList.add('active');
+        }
+
+        // Sync vertical dot navigation
+        document.querySelectorAll('.dot-nav-item').forEach(dot => {
+          dot.classList.remove('active');
+        });
+        const dotId = id === 'profile-section' ? 'preview-section' : id;
+        const activeDot = document.querySelector(`.dot-nav-item[href="#${dotId}"]`);
+        if (activeDot) {
+          activeDot.classList.add('active');
+        }
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(sec => {
+    if (sec) observer.observe(sec);
+  });
+}
+
+function setupSmoothScrolling() {
+  // Smooth scroll links, buttons, and dot-navigation items
+  const clickables = [
+    ...document.querySelectorAll('.nav-link'),
+    ...document.querySelectorAll('.next-step-btn'),
+    ...document.querySelectorAll('.dot-nav-item')
+  ];
+
+  clickables.forEach(el => {
+    el.addEventListener('click', (e) => {
+      const href = el.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const targetId = href.substring(1);
+        const target = $(targetId);
+        if (target) {
+          // If section is currently display:none, show warning
+          if (target.style.display !== 'none' || targetId === 'upload-section') {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else {
+            toast('Not Ready', 'Please upload a CSV file and run validation first.', 'warning');
+          }
+        }
+      }
+    });
+  });
+}
+
+// Initialize scroll handlers
+setupScrollSpy();
+setupSmoothScrolling();
 
 /* ── Init ───────────────────────────────────────────────────────────────────── */
 console.log('%cDataVault v1.0 — Transaction Validation Platform', 'color:#0a84ff;font-weight:bold;font-size:14px;');
